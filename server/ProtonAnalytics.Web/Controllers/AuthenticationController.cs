@@ -1,17 +1,9 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
-using System.Web;
-using System.Web.Mvc;
 using System.Security.Claims;
 using System.Web;
 using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
 using ProtonAnalytics.Web.Models;
 
 namespace ProtonAnalytics.Web.Controllers
@@ -54,6 +46,10 @@ namespace ProtonAnalytics.Web.Controllers
                     }, identity);
 
                     return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewData["Error"] = "Authentication failed.";
                 }
             }
 

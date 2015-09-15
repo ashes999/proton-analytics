@@ -17,6 +17,10 @@
 
     <!-- Custom styles for this template -->
     <link href="@Url.Content("~/Content/css/jumbotron.css")" rel="stylesheet" type="text/css" />
+
+    <!-- styles that aren't generally linked to the current "theme" -->
+    <link href="@Url.Content("~/Content/css/site.css")" rel="stylesheet" type="text/css" />
+
     
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -52,7 +56,14 @@
         </div>
     </nav>
 
-    @RenderSection("Featured")
+    @if (ViewData.ContainsKey("Error"))
+    {
+        <div id="flash" class="error">@ViewData["Error"]</div>
+    }
+
+    @if (IsSectionDefined("Featured")) {
+        @RenderSection("Featured")
+    }
 
     <div class="container">
         @RenderBody()
