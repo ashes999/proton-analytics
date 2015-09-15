@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
+[assembly: OwinStartup(typeof(ProtonAnalytics.Web.App_Start.Startup))]
 namespace ProtonAnalytics.Web.App_Start
 {
     /// <summary>

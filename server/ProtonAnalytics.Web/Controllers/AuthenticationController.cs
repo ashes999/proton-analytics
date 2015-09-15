@@ -12,6 +12,7 @@ using System.Web.Mvc;
 using AttributeRouting.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using ProtonAnalytics.Web.Models;
 
 namespace ProtonAnalytics.Web.Controllers
 {
