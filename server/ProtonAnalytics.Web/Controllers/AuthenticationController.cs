@@ -15,15 +15,15 @@ namespace ProtonAnalytics.Web.Controllers
             get { return HttpContext.GetOwinContext().Authentication; }
         }
 
-        [GET("login")]
-        public ActionResult Show()
+        [GET("signin")]
+        public ActionResult SignIn()
         {
             return View();
         }
 
-        [POST("login")]
+        [POST("signin")]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginModel input)
+        public ActionResult SignIn(LoginModel input)
         {
             if (ModelState.IsValid)
             {
@@ -53,14 +53,14 @@ namespace ProtonAnalytics.Web.Controllers
                 }
             }
 
-            return View("Show", input);
+            return View("SignIn", input);
         }
 
-        [GET("logout")]
+        [GET("signout")]
         public ActionResult Logout()
         {
             Authentication.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("login");
+            return RedirectToAction("signin");
         }
     }
 }
