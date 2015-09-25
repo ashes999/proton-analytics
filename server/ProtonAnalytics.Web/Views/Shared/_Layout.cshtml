@@ -39,7 +39,7 @@
                 @Html.ActionLink("Proton Analytics", "Index", "Home", null, new { @class = "navbar-brand" })
                 @if (User.Identity.IsAuthenticated)
                 {
-                    
+                    @Html.ActionLink("Games", "Index", "Game", null, new { @class = "navbar-brand" })
                 }
             </div>
             <div id="navbar" class="navbar-collapse collapse">
