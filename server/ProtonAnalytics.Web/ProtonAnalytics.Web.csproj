@@ -322,12 +322,6 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ProtonAnalytics.JsonApi\ProtonAnalytics.JsonApi.csproj">
-      <Project>{4d7bbdf9-5bf6-44fb-b675-d16f488be9e0}</Project>
-      <Name>ProtonAnalytics.JsonApi</Name>
-    </ProjectReference>
-  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
