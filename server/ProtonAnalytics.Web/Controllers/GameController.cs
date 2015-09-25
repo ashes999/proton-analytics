@@ -29,7 +29,7 @@ namespace ProtonAnalytics.Web.Controllers
         // GET: /Game/Create
         public ActionResult Create()
         {
-            return View(new Game(0));
+            return View(new Game(this.CurrentUserId));
         }
 
         //

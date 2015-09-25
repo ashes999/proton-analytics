@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Configuration;
+using System.Data.SqlClient;
 using System.Web.Mvc;
 using Dapper;
 
@@ -19,10 +17,21 @@ namespace ProtonAnalytics.Web.Controllers
                 if (currentUserId == 0)
                 {
                     var userName = User.Identity.Name;
-                    currentUserId = 999;
+                    var userId = ExecuteScalar<int>("SELECT UserId FROM UserProfile WHERE UserName = @userName", new { userName = userName });
+                    this.currentUserId = userId;
                 }
 
                 return currentUserId;
+            }
+        }
+
+        public T ExecuteScalar<T>(string sql, object param)
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings[0].ConnectionString;
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return connection.ExecuteScalar<T>(sql, param);
             }
         }
 	}
