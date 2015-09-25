@@ -37,6 +37,10 @@
                     <span class="icon-bar"></span>
                 </button>
                 @Html.ActionLink("Proton Analytics", "Index", "Home", null, new { @class = "navbar-brand" })
+                @if (User.Identity.IsAuthenticated)
+                {
+                    
+                }
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 @Html.Partial("_LoginPartial")
