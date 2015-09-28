@@ -1,6 +1,7 @@
 ﻿using ProtonAnalytics.JsonApiClient;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ namespace ProtonAnalytics.Web.Controllers
 {
     public class HomeController : Controller
     {
-        JsonHttpClient client = new JsonHttpClient("http://localhost/ProtonAnalytics.JsonApi");
+        JsonHttpClient client = new JsonHttpClient(ConfigurationManager.AppSettings["ApiBaseUrl"]);
 
         public async Task<ActionResult> Index()
         {
