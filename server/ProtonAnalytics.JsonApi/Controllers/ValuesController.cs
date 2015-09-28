@@ -10,9 +10,9 @@ namespace ProtonAnalytics.JsonApi.Controllers
     public class ValuesController : ApiController
     {
         // GET api/values
-        public IEnumerable<string> Get()
+        public DateTime Get()
         {
-            return new string[] { "value1", "value2" };
+            return DateTime.UtcNow;
         }
 
         // GET api/values/5

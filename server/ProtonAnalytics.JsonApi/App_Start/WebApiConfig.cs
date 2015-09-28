@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace ProtonAnalytics.JsonApi
@@ -23,6 +26,26 @@ namespace ProtonAnalytics.JsonApi
             // To disable tracing in your application, please comment out or remove the following line of code
             // For more information, refer to: http://www.asp.net/web-api
             config.EnableSystemDiagnosticsTracing();
+
+            // Return JSON by default, unless the consumer requests Content-Type as text/xml.
+            // http://stackoverflow.com/a/20556625/210780
+            config.Formatters.Add(new BrowserJsonFormatter());
+        }
+
+        // Return JSON, and specify the cnotent-type is application/json, not text/html.
+        public class BrowserJsonFormatter : JsonMediaTypeFormatter
+        {
+            public BrowserJsonFormatter()
+            {
+                this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/html"));
+                this.SerializerSettings.Formatting = Formatting.Indented;
+            }
+
+            public override void SetDefaultContentHeaders(Type type, HttpContentHeaders headers, MediaTypeHeaderValue mediaType)
+            {
+                base.SetDefaultContentHeaders(type, headers, mediaType);
+                headers.ContentType = new MediaTypeHeaderValue("application/json");
+            }
         }
     }
 }

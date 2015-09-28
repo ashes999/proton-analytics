@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtonAnalytics.Web", "Prot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtonAnalytics.JsonApi", "ProtonAnalytics.JsonApi\ProtonAnalytics.JsonApi.csproj", "{B5272F42-C277-41A2-9D5D-76C90DB6F726}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtonAnalytics.JsonApiClient", "ProtonAnalytics.JsonApiClient\ProtonAnalytics.JsonApiClient.csproj", "{5C978515-98DB-4E86-ACC0-5AA778E35E43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{B5272F42-C277-41A2-9D5D-76C90DB6F726}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5272F42-C277-41A2-9D5D-76C90DB6F726}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5272F42-C277-41A2-9D5D-76C90DB6F726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C978515-98DB-4E86-ACC0-5AA778E35E43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C978515-98DB-4E86-ACC0-5AA778E35E43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C978515-98DB-4E86-ACC0-5AA778E35E43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C978515-98DB-4E86-ACC0-5AA778E35E43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
