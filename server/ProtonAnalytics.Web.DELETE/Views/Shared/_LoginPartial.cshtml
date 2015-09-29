@@ -1,9 +1,0 @@
-﻿@if (Request.IsAuthenticated) {
-        @Html.ActionLink("Change Password", "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "navbar-brand", title = "Manage" })
-        using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
-            @Html.AntiForgeryToken()
-    <a href="javascript:document.getElementById('logoutForm').submit()" class="navbar-brand">Log off</a>
-        }
-} else {
-        @Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink", @class = "navbar-brand" })
-}
