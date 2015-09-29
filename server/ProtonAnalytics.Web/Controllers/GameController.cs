@@ -5,18 +5,35 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Dapper;
+using ProtonAnalytics.JsonApiClient;
 
 namespace ProtonAnalytics.Web.Controllers
 {
-    [Authorize]
-    public class GameController : Controller
+    public class GameController : AuthorizedController
     {
         //
         // GET: /Game/
         public ActionResult Index()
         {
-            var myGames = new List<Game>();
-            return View(myGames);
+            var jsonObject = new JsonHttpClient().Get("/api/games");
+            if (jsonObject.Data == null)
+            {
+                // Do we have errors?
+                if (jsonObject.Errors.Length > 0)
+                {
+                    ViewBag.Flash = string.Join(",", jsonObject.Errors);
+                }
+                return View(new List<Game>());
+            }
+            else
+            {
+                var games = new List<Game>();
+                foreach (var json in jsonObject.Data)
+                {
+                    games.Add(new Game() { Id = json.Id, Name = json.Name, OwnerId = json.OwnerId });
+                }
+                return View(games);
+            }
         }
 
         //
@@ -30,7 +47,7 @@ namespace ProtonAnalytics.Web.Controllers
         // GET: /Game/Create
         public ActionResult Create()
         {
-            return View(new Game(this.CurrentUserId));
+            return View(new Game() { OwnerId = this.CurrentUserId });
         }
 
         //

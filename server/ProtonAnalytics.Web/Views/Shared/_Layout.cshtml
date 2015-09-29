@@ -53,6 +53,10 @@
     <div class="container">
         <!-- Example row of columns -->
         <div class="row">
+            @if (!string.IsNullOrEmpty(ViewBag.Flash))
+            {
+                <div id="flash">@ViewBag.Flash</div>
+            }
             @RenderBody()
         </div>
 

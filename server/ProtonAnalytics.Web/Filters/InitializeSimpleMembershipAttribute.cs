@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ProtonAnalytics.Web.Models;
+using System;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Threading;
 using System.Web.Mvc;
 using WebMatrix.WebData;
-using ProtonAnalytics.Web.Models;
 
 namespace ProtonAnalytics.Web.Filters
 {
@@ -25,7 +25,7 @@ namespace ProtonAnalytics.Web.Filters
         {
             public SimpleMembershipInitializer()
             {
-                Database.SetInitializer<UsersContext>(null);
+                System.Data.Entity.Database.SetInitializer<UsersContext>(null);
 
                 try
                 {

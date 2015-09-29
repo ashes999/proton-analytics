@@ -12,13 +12,9 @@ namespace ProtonAnalytics.Web.Controllers
 {
     public class HomeController : Controller
     {
-        JsonHttpClient client = new JsonHttpClient(ConfigurationManager.AppSettings["ApiBaseUrl"]);
-
-        public async Task<ActionResult> Index()
+        public ActionResult Index()
         {
             ViewBag.Message = "Modify this template to jump-start your ASP.NET MVC application.";            
-            var json = await client.Get<DateTime>("/api/values");
-            ViewBag.Message = "The time is: " + json.Data.ToString();
             return View();
         }
 

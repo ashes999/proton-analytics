@@ -1,4 +1,12 @@
-﻿/* login
+﻿#flash {
+    border: 4px double #888;
+    background-color: #eee;
+    padding: 8px;
+    margin: 4px;
+    width: 100%;
+}
+
+/* login
 ----------------------------------------------------------*/
 #login {
     display: block;

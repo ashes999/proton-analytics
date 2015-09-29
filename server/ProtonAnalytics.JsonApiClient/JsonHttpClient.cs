@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using ProtonAnalytics.JsonApi.Transport;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,29 +15,45 @@ namespace ProtonAnalytics.JsonApiClient
     {
         private string baseUrl;
 
-        public JsonHttpClient(string baseUrl)
+        public JsonHttpClient(string baseUrl = null)
         {
+            if (string.IsNullOrEmpty(baseUrl)) {
+                baseUrl = ConfigurationManager.AppSettings["ApiBaseUrl"];
+            }
+
             this.baseUrl = baseUrl;
         }
 
-        public async Task<JsonApiObject<T>> Get<T>(string relativeUrl)
+        public JsonApiObject Get(string relativeUrl)
         {            
             using (HttpClient client = new HttpClient())
             {
-                var response = await client.GetAsync(string.Format("{0}/{1}", baseUrl, relativeUrl));
+                var response = client.GetAsync(string.Format("{0}/{1}", baseUrl, relativeUrl));
+                response.Wait();
 
-                var task = response.Content.ReadAsStringAsync();
+                var task = response.Result.Content.ReadAsStringAsync();
                 task.Wait();
-                var content = task.Result;
 
-                if (response.IsSuccessStatusCode)
+                if (response.Result.StatusCode != System.Net.HttpStatusCode.OK)
                 {
-                    var asObject = JsonConvert.DeserializeObject<T>(content);
-                    return new JsonApiObject<T>(asObject);
+                    return new JsonApiObject(new string[] { string.Format("Error calling {0}: {1}", response.Result.RequestMessage.RequestUri, response.Result.ReasonPhrase) });
                 }
                 else
                 {
-                    return new JsonApiObject<T>(new string[] { content });
+                    // Deserializing to JsonApiObject doesn't work; all fields are null. Why?
+                    // Adding the "Type" property to the JSON didn't help, either.
+                    var raw = JsonConvert.DeserializeObject<dynamic>(task.Result);
+                    var data = raw.Data;
+                    var errors = raw.Errors as IEnumerable<string>;
+
+                    if (errors != null)
+                    {
+                        return new JsonApiObject(errors);
+                    }
+                    else
+                    {
+                        return new JsonApiObject(data);
+                    }
                 }
             }
         }
