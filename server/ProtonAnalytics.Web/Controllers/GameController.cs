@@ -15,20 +15,21 @@ namespace ProtonAnalytics.Web.Controllers
         // GET: /Game/
         public ActionResult Index()
         {
-            var jsonObject = new JsonHttpClient().Get<Game>("/games");
-            if (jsonObject.Data == null)
-            {
-                // Do we have errors?
-                if (jsonObject.Errors.Any())
-                {
-                    ViewBag.Flash = string.Join(",", jsonObject.Errors);
-                }
-                return View(new List<Game>());
-            }
-            else
-            {
-                return View(jsonObject.Data);
-            }
+            //var jsonObject = new JsonHttpClient().Get<Game>("/games");
+            //if (jsonObject.Data == null)
+            //{
+            //    // Do we have errors?
+            //    if (jsonObject.Errors.Any())
+            //    {
+            //        ViewBag.Flash = string.Join(",", jsonObject.Errors);
+            //    }
+            //    return View(new List<Game>());
+            //}
+            //else
+            //{
+            //    return View(jsonObject.Data);
+            //}
+            return View();
         }
 
         //

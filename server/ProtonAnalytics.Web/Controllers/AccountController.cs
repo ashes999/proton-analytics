@@ -10,6 +10,9 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using ProtonAnalytics.Web.Filters;
 using ProtonAnalytics.Web.Models;
+using System.Net.Http;
+using System.Threading.Tasks;
+using ProtonAnalytics.Web.Api;
 
 namespace ProtonAnalytics.Web.Controllers
 {
@@ -72,16 +75,27 @@ namespace ProtonAnalytics.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterModel model)
+        public async Task<ActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
                 // Attempt to register the user
                 try
                 {
-                    WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
-                    return RedirectToAction("Index", "Home");
+                    //WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
+                    var client = new JsonHttpClient();
+                    var result = await client.PostAsJsonAsync("/Account/Register", model);
+
+                    if (result.IsSuccessStatusCode)
+                    {
+                        Console.WriteLine("SUCCESS");
+                        //WebSecurity.Login(model.UserName, model.Password);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    else
+                    {
+                        Console.WriteLine("FAIL");
+                    }
                 }
                 catch (MembershipCreateUserException e)
                 {
