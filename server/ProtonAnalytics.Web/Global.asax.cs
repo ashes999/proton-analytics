@@ -1,5 +1,4 @@
-﻿using ProtonAnalytics.Web.Persistence;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -19,13 +18,23 @@ namespace ProtonAnalytics.Web
         {
             AreaRegistration.RegisterAllAreas();
 
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 
-            MigrationsRunner.MigrateToLatest();
+            // Try to run migrations. This fails if the EF auth tables don't
+            // exist yet (first run of the app). That's okay; migrations run
+            // after those tables are initialized, elsewhere. We still need
+            // this to auto-run migrations at startup time.
+            try
+            {
+                ProtonAnalytics.Web.Persistence.MigrationsRunner.MigrateToLatest();
+            }
+            catch
+            {
+                // Gotta catch 'em all ...
+            }
         }
     }
 }
