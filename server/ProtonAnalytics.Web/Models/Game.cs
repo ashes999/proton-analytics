@@ -9,8 +9,10 @@ namespace ProtonAnalytics.Web.Models
     public class Game
     {
         public Guid Id { get; set; }
+
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]        
         public string Name { get; set; }
+
         public int OwnerId { get; set; }
     }
 }
