@@ -26,9 +26,6 @@ namespace ProtonAnalytics.Web
             // Return JSON by default, unless the consumer requests Content-Type as text/xml.
             // http://stackoverflow.com/a/20556625/210780
             config.Formatters.Add(new BrowserJsonFormatter());
-
-            // Require authentication on Web API calls by default
-            //config.Filters.Add(new AuthorizeAttribute());
         }
 
         // Return JSON, and specify the cnotent-type is application/json, not text/html.
