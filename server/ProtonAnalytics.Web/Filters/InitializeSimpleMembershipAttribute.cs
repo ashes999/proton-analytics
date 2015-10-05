@@ -39,6 +39,9 @@ namespace ProtonAnalytics.Web.Filters
                     }
 
                     WebSecurity.InitializeDatabaseConnection("DefaultConnection", "UserProfile", "UserId", "UserName", autoCreateTables: true);
+                    
+                    // Run migrations, since they depend on these tables
+                    ProtonAnalytics.Web.Persistence.MigrationsRunner.MigrateToLatest();
                 }
                 catch (Exception ex)
                 {

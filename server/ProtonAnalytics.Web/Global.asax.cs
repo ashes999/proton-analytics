@@ -25,7 +25,15 @@ namespace ProtonAnalytics.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             AuthConfig.RegisterAuth();
 
-            MigrationsRunner.MigrateToLatest();
+            try
+            {
+                MigrationsRunner.MigrateToLatest();
+            }
+            catch
+            {
+                // Wait for user tables to be initialized. This won't happen a second time.
+                // (Migrations are run after initializing the tables.)
+            }
         }
     }
 }

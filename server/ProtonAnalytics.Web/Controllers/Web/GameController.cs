@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using Dapper;
 using ProtonAnalytics.Web.Api;
+using ProtonAnalytics.Web.Controllers.Api;
 
 namespace ProtonAnalytics.Web.Controllers.Web
 {
@@ -15,7 +16,7 @@ namespace ProtonAnalytics.Web.Controllers.Web
         // GET: /Game/
         public ActionResult Index()
         {
-            var jsonObject = new JsonHttpClient().Get<Game>("/games");
+            var jsonObject = new GamesController().Get();
             if (jsonObject.Data == null)
             {
                 // Do we have errors?
