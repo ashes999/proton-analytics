@@ -233,7 +233,6 @@
     <Compile Include="Persistence\Migrations\001_CreateGameTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Api\JsonApiObject.cs" />
-    <Compile Include="Api\JsonHttpClient.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />

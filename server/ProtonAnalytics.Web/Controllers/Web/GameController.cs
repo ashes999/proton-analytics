@@ -5,7 +5,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Dapper;
-using ProtonAnalytics.Web.Api;
 using ProtonAnalytics.Web.Controllers.Api;
 
 namespace ProtonAnalytics.Web.Controllers.Web

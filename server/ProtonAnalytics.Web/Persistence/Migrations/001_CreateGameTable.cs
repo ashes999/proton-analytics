@@ -14,7 +14,8 @@ namespace ProtonAnalytics.Web.Persistence.Migrations
             Create.Table("Game")
                 .WithColumn("Id").AsGuid().PrimaryKey()
                 .WithColumn("Name").AsString(64)
-                .WithColumn("OwnerId").AsInt32().ForeignKey("UserProfile", "UserId");
+                .WithColumn("OwnerId").AsInt32()
+                    .ForeignKey("UserProfile", "UserId").OnDeleteOrUpdate(System.Data.Rule.Cascade);
         }
     }
 }
