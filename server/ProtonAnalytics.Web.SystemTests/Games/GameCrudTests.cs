@@ -22,8 +22,6 @@ namespace ProtonAnalytics.Web.Tests.Games
 
             var client = this.GetAuthenticatedClient(firstUser.UserName);
 
-            Console.WriteLine("First=" + firstUser.UserName + " and second=" + secondUser.UserName);
-
             var page = client.GetSiteUrl("/Game").Body.TextContent;
             Assert.IsTrue(page.Contains(firstUsersGame));
             Assert.IsFalse(page.Contains(secondUsersGame));
