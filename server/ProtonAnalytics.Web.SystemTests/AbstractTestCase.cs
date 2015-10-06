@@ -107,22 +107,6 @@ namespace ProtonAnalytics.Web.Tests
             return toReturn;
         }
 
-        public static void Register(this WebClient client, string userName, string password)
-        {
-            // substitute in machine name and URL (machine name means we can see requests/responses in Fiddler).
-            // eg. http://{0}/ProtonAnalytics.Web/{1} => http://winpc01/ProtonAnalytics.web/Account/Login
-            var page = client.GetSiteUrl("/Account/Register");
-            page.SetTextField("UserName", userName);
-            page.SetTextField("Password", password);
-            page.SetTextField("ConfirmPassword", password);
-            var toReturn = page.GetHtmlElementById("submit").Click();
-            if (toReturn.IsHtmlPage() && ((HtmlPage)toReturn).AsText().ToUpper().Contains("LOG IN"))
-            {
-                Console.WriteLine(toReturn.WebResponse.GetContentAsString("ASCII"));
-                throw new InvalidOperationException("Registration failed for " + userName + " with password " + password);
-            }
-        }
-
         public static void SetTextField(this HtmlPage page, string id, string value)
         {
             var element = page.GetHtmlElementById(id);
