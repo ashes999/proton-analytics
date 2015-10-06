@@ -230,7 +230,7 @@
     <Compile Include="Controllers\Web\GameController.cs" />
     <Compile Include="Controllers\Api\GamesController.cs" />
     <Compile Include="Controllers\Web\HomeController.cs" />
-    <Compile Include="Persistence\DatabaseReader.cs" />
+    <Compile Include="Persistence\DatabaseMediator.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

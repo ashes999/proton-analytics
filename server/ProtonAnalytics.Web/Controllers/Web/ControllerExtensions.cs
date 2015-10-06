@@ -17,7 +17,7 @@ namespace ProtonAnalytics.Web.Controllers.Web
             var userName = c.User.Identity.Name;
             if (!userNameToId.ContainsKey(userName))
             {
-                var userId = DatabaseReader.ExecuteScalar<int>("SELECT UserId FROM UserProfile WHERE UserName = @name", new { name = userName });
+                var userId = DatabaseMediator.ExecuteScalar<int>("SELECT UserId FROM UserProfile WHERE UserName = @name", new { name = userName });
                 userNameToId[userName] = userId;
             }
 
@@ -29,7 +29,7 @@ namespace ProtonAnalytics.Web.Controllers.Web
             var userName = c.User.Identity.Name;
             if (!userNameToId.ContainsKey(userName))
             {
-                var userId = DatabaseReader.ExecuteScalar<int>("SELECT UserId FROM UserProfile WHERE UserName = @name", new { name = userName });
+                var userId = DatabaseMediator.ExecuteScalar<int>("SELECT UserId FROM UserProfile WHERE UserName = @name", new { name = userName });
                 userNameToId[userName] = userId;
             }
 

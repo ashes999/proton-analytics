@@ -9,6 +9,7 @@ using System.Web.Http;
 using Dapper;
 using ProtonAnalytics.Web.Models;
 using ProtonAnalytics.Web.Controllers.Web;
+using Newtonsoft.Json;
 
 namespace ProtonAnalytics.Web.Controllers.Api
 {
@@ -18,29 +19,45 @@ namespace ProtonAnalytics.Web.Controllers.Api
         // GET api/games
         public JsonApiObject<Game> Get()
         {
-            var all = DatabaseReader.GetAll<Game>("SELECT * FROM Game WHERE OwnerId = @me", new { me = this.GetCurrentUserId() });
+            var all = DatabaseMediator.GetAll<Game>("SELECT * FROM Game WHERE OwnerId = @me", new { me = this.GetCurrentUserId() });
             return new JsonApiObject<Game>(all);
         }
 
         // GET api/games/5
-        public string Get(int id)
+        public JsonApiObject<Game> Get(Guid id)
         {
-            return "value";
+            return null;
         }
 
         // POST api/games
-        public void Post([FromBody]string value)
+        public JsonApiObject<Game> Post([FromBody]string json)
         {
+            var game = JsonConvert.DeserializeObject<Game>(json);
+            var toReturn = new JsonApiObject<Game>();
+
+            if (game.IsValid())
+            {
+                toReturn.Data = new List<Game> { game };
+                DatabaseMediator.ExecuteQuery("INSERT INTO Game (Id, Name, OwnerId) VALUES (@Id, @Name, @OwnerId)", game);
+            }
+            else
+            {
+                toReturn.Errors = new string[] { "Validation failed." };
+            }
+
+            return toReturn;
         }
 
         // PUT api/games/5
-        public void Put(int id, [FromBody]string value)
+        public JsonApiObject<Game> Put(Guid id, [FromBody]string json)
         {
+            return null;
         }
 
         // DELETE api/games/5
-        public void Delete(int id)
+        public JsonApiObject<Game> Delete(Guid id)
         {
+            return null;
         }
     }
 }

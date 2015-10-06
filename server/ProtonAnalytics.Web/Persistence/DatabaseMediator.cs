@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 
 namespace ProtonAnalytics.Web.Persistence
 {
-    public static class DatabaseReader
+    public static class DatabaseMediator
     {
         public static T ExecuteScalar<T>(string sql, object parameters = null)
         {
@@ -16,6 +16,15 @@ namespace ProtonAnalytics.Web.Persistence
             {
                 T toReturn = connection.ExecuteScalar<T>(sql, parameters);
                 return toReturn;
+            }
+        }
+
+        public static void ExecuteQuery(string sql, object parameters = null)
+        {
+            var connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Execute(sql, parameters);
             }
         }
 

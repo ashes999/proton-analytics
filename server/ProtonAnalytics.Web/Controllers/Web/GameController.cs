@@ -6,17 +6,20 @@ using System.Web;
 using System.Web.Mvc;
 using Dapper;
 using ProtonAnalytics.Web.Controllers.Api;
+using Newtonsoft.Json;
 
 namespace ProtonAnalytics.Web.Controllers.Web
 {
     [Authorize]
     public class GameController : Controller
     {
+        private GamesController apiController = new GamesController();
+
         //
         // GET: /Game/
         public ActionResult Index()
         {
-            var jsonObject = new GamesController().Get();
+            var jsonObject = apiController.Get();
             if (jsonObject.Data == null)
             {
                 // Do we have errors?
@@ -51,15 +54,26 @@ namespace ProtonAnalytics.Web.Controllers.Web
         [HttpPost]
         public ActionResult Create(FormCollection collection)
         {
-            try
+            var json = JsonConvert.SerializeObject(new Game()
             {
-                // TODO: Add insert logic here
+                Id = Guid.NewGuid(),
+                Name = collection["Name"],
+                OwnerId = int.Parse(collection["OwnerId"])
+            });
 
-                return RedirectToAction("Index");
-            }
-            catch
+            var jsonObject = apiController.Post(json);
+            if (jsonObject.Data == null)
             {
+                // Do we have errors?
+                if (jsonObject.Errors.Any())
+                {
+                    ViewBag.Flash = string.Join(",", jsonObject.Errors);
+                }
                 return View();
+            }
+            else
+            {
+                return RedirectToAction("Index");
             }
         }
 
