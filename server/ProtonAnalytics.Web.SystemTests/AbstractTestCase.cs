@@ -98,7 +98,7 @@ namespace ProtonAnalytics.Web.Tests
             var page = client.GetSiteUrl("/Account/Login");
             page.SetTextField("UserName", userName);
             page.SetTextField("Password", password);
-            var toReturn = page.GetHtmlElementById("submit").Click();
+            var toReturn = page.ClickSubmit();
             if (toReturn.IsHtmlPage() && ((HtmlPage)toReturn).AsText().ToUpper().Contains("LOG IN"))
             {
                 Console.WriteLine(toReturn.WebResponse.GetContentAsString("ASCII"));
@@ -122,6 +122,11 @@ namespace ProtonAnalytics.Web.Tests
             {
                 throw new InvalidOperationException("Not sure how to set text on " + id + ": " + element);
             }
+        }
+
+        public static IPage ClickSubmit(this HtmlPage page)
+        {
+            return page.GetHtmlElementById("submit").Click();
         }
     }
 }

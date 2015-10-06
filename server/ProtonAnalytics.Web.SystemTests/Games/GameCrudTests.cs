@@ -26,5 +26,21 @@ namespace ProtonAnalytics.Web.Tests.Games
             Assert.IsTrue(page.Contains(firstUsersGame));
             Assert.IsFalse(page.Contains(secondUsersGame));
         }
+
+        [Test]
+        public void GameCreatePageCreatesGameInDb()
+        {
+            var gameName = "FT-FunctionalTestGame";
+            this.ExecuteQuery("DELETE FROM Game WHERE Name = @name", new { name = gameName });
+
+            var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
+            var client = this.GetAuthenticatedClient(user.UserName);
+            var page = client.GetSiteUrl("/Game/Create");
+            page.SetTextField("Name", gameName);
+            page.ClickSubmit();
+
+            var count = this.ExecuteScalar<int>("SELECT COUNT(*) FROM Game WHERE Name = @name", new { name = gameName });
+            Assert.That(count, Is.EqualTo(1), "Didn't see game in DB after creating it");
+        }
     }
 }
