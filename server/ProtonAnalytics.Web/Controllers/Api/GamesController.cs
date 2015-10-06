@@ -12,6 +12,7 @@ using ProtonAnalytics.Web.Controllers.Web;
 
 namespace ProtonAnalytics.Web.Controllers.Api
 {
+    [Authorize]
     public class GamesController : ApiController
     {
         // GET api/games
