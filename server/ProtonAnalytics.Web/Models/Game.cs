@@ -17,8 +17,6 @@ namespace ProtonAnalytics.Web.Models
 
         internal bool IsValid()
         {
-            // TODO: how do I re-use MVC validation here?
-            // TODO: validate the owner ID is legit (points to a real user)
             return this.Id != Guid.Empty && !string.IsNullOrEmpty(this.Name) && this.Name.Length >= 6 && this.OwnerId > 0;
         }
     }

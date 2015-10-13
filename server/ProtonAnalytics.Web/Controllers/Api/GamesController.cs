@@ -33,6 +33,8 @@ namespace ProtonAnalytics.Web.Controllers.Api
         public JsonApiObject<Game> Post([FromBody]string json)
         {
             var game = JsonConvert.DeserializeObject<Game>(json);
+            game.OwnerId = this.GetCurrentUserId();
+
             var toReturn = new JsonApiObject<Game>();
 
             if (game.IsValid())
