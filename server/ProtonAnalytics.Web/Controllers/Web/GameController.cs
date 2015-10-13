@@ -13,7 +13,13 @@ namespace ProtonAnalytics.Web.Controllers.Web
     [Authorize]
     public class GameController : Controller
     {
-        private GamesController apiController = new GamesController();
+        private GamesController apiController;
+
+        // Ninject constructor injection; see NinjectWebCommon.cs
+        public GameController(GamesController apiController)
+        {
+            this.apiController = apiController;
+        }
 
         //
         // GET: /Game/
