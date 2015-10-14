@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 
-namespace ProtonAnalytics.JsonApi.Api
+namespace ProtonAnalytics.Web.Api
 {
     public class JsonApiObject<T>
     {

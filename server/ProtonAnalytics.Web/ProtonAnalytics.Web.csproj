@@ -242,11 +242,13 @@
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\Api\GameSessionsController.cs" />
     <Compile Include="Controllers\Web\AccountController.cs" />
     <Compile Include="Controllers\Web\ControllerExtensions.cs" />
     <Compile Include="Controllers\Web\GameController.cs" />
     <Compile Include="Controllers\Api\GamesController.cs" />
     <Compile Include="Controllers\Web\HomeController.cs" />
+    <Compile Include="Models\GameSession.cs" />
     <Compile Include="Persistence\DatabaseMediator.cs" />
     <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
@@ -255,6 +257,7 @@
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Game.cs" />
     <Compile Include="Persistence\MigrationsRunner.cs" />
+    <Compile Include="Persistence\Migrations\002_CreateGameSessionTable.cs" />
     <Compile Include="Persistence\Migrations\001_CreateGameTable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Api\JsonApiObject.cs" />
@@ -329,6 +332,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\Authorized\" />
+    <Folder Include="Views\GameSession\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

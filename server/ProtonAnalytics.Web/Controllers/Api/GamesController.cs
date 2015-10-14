@@ -1,4 +1,4 @@
-﻿using ProtonAnalytics.JsonApi.Api;
+﻿using ProtonAnalytics.Web.Api;
 using ProtonAnalytics.Web.Persistence;
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using Dapper;
 using ProtonAnalytics.Web.Models;
 using ProtonAnalytics.Web.Controllers.Web;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace ProtonAnalytics.Web.Controllers.Api
 {
@@ -33,12 +34,15 @@ namespace ProtonAnalytics.Web.Controllers.Api
         public JsonApiObject<Game> Post([FromBody]string json)
         {
             var game = JsonConvert.DeserializeObject<Game>(json);
-            game.OwnerId = this.GetCurrentUserId();
 
             var toReturn = new JsonApiObject<Game>();
 
             if (game.IsValid())
             {
+                if (game.Id == Guid.Empty)
+                {
+                    game.Id = Guid.NewGuid();
+                }
                 toReturn.Data = new List<Game> { game };
                 DatabaseMediator.ExecuteQuery("INSERT INTO Game (Id, Name, OwnerId) VALUES (@Id, @Name, @OwnerId)", game);
             }

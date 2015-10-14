@@ -9,6 +9,8 @@ using System.Data.SqlClient;
 using NHtmlUnit;
 using ProtonAnalytics.Web.Tests;
 using NHtmlUnit.Html;
+using Newtonsoft.Json;
+using NLog;
 
 namespace ProtonAnalytics.Web.Tests
 {
@@ -16,6 +18,7 @@ namespace ProtonAnalytics.Web.Tests
     {
         internal readonly string UserTableName = "UserProfile";
         internal const string WebsiteUrl = "http://{0}/ProtonAnalytics.Web/{1}";
+        internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void ExecuteQuery(string sql, object parameters = null)
         {
@@ -69,8 +72,20 @@ namespace ProtonAnalytics.Web.Tests
 
         protected WebClient GetAuthenticatedClient(string userName)
         {
-            var client = new WebClient(BrowserVersion.CHROME);
+            var client = GetClient();
             client.LogIn(userName, this.PasswordFor(userName));
+            return client;
+        }
+
+        protected User GetAnyUser()
+        {
+            var firstUser = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
+            return firstUser;
+        }
+
+        protected WebClient GetClient()
+        {
+            var client = new WebClient(BrowserVersion.CHROME);
             return client;
         }
 
@@ -89,6 +104,43 @@ namespace ProtonAnalytics.Web.Tests
             // eg. http://{0}/ProtonAnalytics.Web/{1} => http://winpc01/ProtonAnalytics.web/Account/Login
             var page = client.GetHtmlPage(string.Format(AbstractTestCase.WebsiteUrl, Environment.MachineName, relativeUrl));
             return page;
+        }
+
+        public static NHtmlUnit.IPage GetSiteUrl(this WebClient client, string relativeUrl, string httpVerb, object body)
+        {
+            var method = ConvertToEnum(httpVerb);
+            var json = JsonConvert.SerializeObject(body);
+
+            var url = new java.net.URL(string.Format(AbstractTestCase.WebsiteUrl, Environment.MachineName, relativeUrl));
+            var webRequest = new WebRequest(url, new HttpMethod(method))
+            {
+                RequestBody = "=" + json // WebAPI expects this. Don't ask me why.
+            };
+
+            AbstractTestCase.Logger.Info(string.Format("{0} {1}", httpVerb, relativeUrl));
+            if (body != null)
+            {
+                AbstractTestCase.Logger.Info("Body:\n" + json);
+            }
+            var page = client.GetPage(webRequest);
+            return page;
+        }
+
+        private static com.gargoylesoftware.htmlunit.HttpMethod ConvertToEnum(string httpVerb)
+        {
+            switch (httpVerb.ToUpper())
+            {
+                case "GET":
+                    return com.gargoylesoftware.htmlunit.HttpMethod.GET;
+                case "POST":
+                    return com.gargoylesoftware.htmlunit.HttpMethod.POST;
+                case "PUT":
+                    return com.gargoylesoftware.htmlunit.HttpMethod.PUT;
+                case "DELETE":
+                    return com.gargoylesoftware.htmlunit.HttpMethod.DELETE;
+                default:
+                    throw new ArgumentException(string.Format("Not sure how to convert '{0}' to an HTTP verb", httpVerb));
+            }
         }
 
         public static IPage LogIn(this WebClient client, string userName, string password)

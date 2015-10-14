@@ -1,7 +1,11 @@
-﻿using NUnit.Framework;
+﻿using Newtonsoft.Json;
+using NUnit.Framework;
+using ProtonAnalytics.Web.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -30,7 +34,7 @@ namespace ProtonAnalytics.Web.Tests.Games
         [Test]
         public void GameCreatePageCreatesGameInDb()
         {
-            var gameName = "FT-FunctionalTestGame";
+            var gameName = "FT-FunctionalTestGameView";
             this.ExecuteQuery("DELETE FROM Game WHERE Name = @name", new { name = gameName });
 
             var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
@@ -41,6 +45,48 @@ namespace ProtonAnalytics.Web.Tests.Games
 
             var count = this.ExecuteScalar<int>("SELECT COUNT(*) FROM Game WHERE Name = @name", new { name = gameName });
             Assert.That(count, Is.EqualTo(1), "Didn't see game in DB after creating it");
+        }
+
+        [Test]
+        public void UserCanPostGame()
+        {
+            var gameName = "FT-FunctionalTestGame";
+            this.ExecuteQuery("DELETE FROM Game WHERE Name = @name", new { name = gameName });
+
+            var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
+            var client = this.GetAuthenticatedClient(user.UserName);
+            var game = new Game()
+            {
+                Name = gameName,
+                OwnerId = user.UserId
+            };
+
+            var page = client.GetSiteUrl("/api/games", "POST", game);
+
+            var count = this.ExecuteScalar<int>("SELECT COUNT(*) FROM Game WHERE Name = @name", new { name = gameName });
+            Assert.That(count, Is.EqualTo(1), "Didn't see game in DB after creating it");
+        }
+
+        [Test]
+        public void HtmlUnitDoesntThrowWhenPostsAndGetsAJsonResponse()
+        {
+            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://aalibhai-d02/ProtonAnalytics.Web/api/games");
+            httpWebRequest.ContentType = "application/json";
+            httpWebRequest.Method = "POST";
+
+            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+            {
+                string json = "={\"Name\":\"FT-FunctionalTestGame\",\"OwnerId\":3}";
+                streamWriter.Write(json);
+                streamWriter.Flush();
+                streamWriter.Close();
+            }
+
+            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
+            {
+                var result = streamReader.ReadToEnd();
+            }
         }
     }
 }

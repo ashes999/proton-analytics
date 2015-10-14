@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ProtonAnalytics.Web.Persistence;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -17,7 +18,9 @@ namespace ProtonAnalytics.Web.Models
 
         internal bool IsValid()
         {
-            return this.Id != Guid.Empty && !string.IsNullOrEmpty(this.Name) && this.Name.Length >= 6 && this.OwnerId > 0;
+            var fieldsAreSpecified = !string.IsNullOrEmpty(this.Name) && this.Name.Length >= 6 && this.OwnerId > 0;
+            var doesOwnerExist = DatabaseMediator.ExecuteScalar<int>("SELECT COUNT(*) FROM UserProfile WHERE UserId = @id", new { id = this.OwnerId }) == 1;
+            return fieldsAreSpecified && doesOwnerExist;
         }
     }
 }
