@@ -14,7 +14,7 @@ namespace ProtonAnalytics.Web.Tests.Games
         [Test]
         public void PostCreatesNewGameSessionsWhenFieldsAreValid()
         {
-            var client = this.GetClient();
+            var client = this.GetHtmlUnitClient();
             var user = this.GetAnyUser();
             var game = this.EnsureUserHasGame(user);
 

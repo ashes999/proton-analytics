@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Ingot.Clients;
+using Newtonsoft.Json;
 using NUnit.Framework;
+using ProtonAnalytics.Web.Api;
 using ProtonAnalytics.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -7,13 +9,17 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace ProtonAnalytics.Web.Tests.Games
 {
     [TestFixture]
     class GameCrudTests : AbstractTestCase
     {
+        #region forms tests
+
         [Test]
         public void GameIndexPageShowsOnlyMyGames()
         {
@@ -24,7 +30,7 @@ namespace ProtonAnalytics.Web.Tests.Games
             var secondUser = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName + " WHERE UserId != @first", new { first = firstUser.UserId });
             var secondUsersGame = this.EnsureUserHasGame(secondUser);
 
-            var client = this.GetAuthenticatedClient(firstUser.UserName);
+            var client = this.GetHtmlUnitAuthenticatedClient(firstUser.UserName);
 
             var page = client.GetSiteUrl("/Game").Body.TextContent;
             Assert.IsTrue(page.Contains(firstUsersGame));
@@ -38,7 +44,7 @@ namespace ProtonAnalytics.Web.Tests.Games
             this.ExecuteQuery("DELETE FROM Game WHERE Name = @name", new { name = gameName });
 
             var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
-            var client = this.GetAuthenticatedClient(user.UserName);
+            var client = this.GetHtmlUnitAuthenticatedClient(user.UserName);
             var page = client.GetSiteUrl("/Game/Create");
             page.SetTextField("Name", gameName);
             page.ClickSubmit();
@@ -46,6 +52,8 @@ namespace ProtonAnalytics.Web.Tests.Games
             var count = this.ExecuteScalar<int>("SELECT COUNT(*) FROM Game WHERE Name = @name", new { name = gameName });
             Assert.That(count, Is.EqualTo(1), "Didn't see game in DB after creating it");
         }
+        
+        #endregion
 
         [Test]
         public void UserCanPostGame()
@@ -54,7 +62,7 @@ namespace ProtonAnalytics.Web.Tests.Games
             this.ExecuteQuery("DELETE FROM Game WHERE Name = @name", new { name = gameName });
 
             var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
-            var client = this.GetAuthenticatedClient(user.UserName);
+            var client = this.GetHtmlUnitAuthenticatedClient(user.UserName);
             var game = new Game()
             {
                 Name = gameName,
@@ -68,25 +76,18 @@ namespace ProtonAnalytics.Web.Tests.Games
         }
 
         [Test]
-        public void HtmlUnitDoesntThrowWhenPostsAndGetsAJsonResponse()
+        public void FormsAuthenticatedUserCanGetAllGamesAndPostGames()
         {
-            var httpWebRequest = (HttpWebRequest)WebRequest.Create("http://aalibhai-d02/ProtonAnalytics.Web/api/games");
-            httpWebRequest.ContentType = "application/json";
-            httpWebRequest.Method = "POST";
+            var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
+            var game = this.EnsureUserHasGame(user);
+            var client = this.GetAuthenticatedClient(user.UserName);
+            
+            string url = "/api/games";                        
+            var result = client.Request("GET", url);
+            Assert.IsNotNull(result);
+            var listOfGames = JsonConvert.DeserializeObject<JsonApiObject<Game>>(result.Content());
 
-            using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
-            {
-                string json = "={\"Name\":\"FT-FunctionalTestGame\",\"OwnerId\":3}";
-                streamWriter.Write(json);
-                streamWriter.Flush();
-                streamWriter.Close();
-            }
-
-            var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
-            using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
-            {
-                var result = streamReader.ReadToEnd();
-            }
+            Assert.That(listOfGames.Data, Is.Not.Null);
         }
     }
 }

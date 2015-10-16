@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtonAnalytics.Web", "Prot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProtonAnalytics.Web.SystemTests", "ProtonAnalytics.Web.SystemTests\ProtonAnalytics.Web.SystemTests.csproj", "{7DC9A008-DD42-44D6-BDFC-B1776B6AAB10}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ingot", "Ingot\Ingot.csproj", "{3E48F5D8-C4EC-4012-85BA-5F73EF7E4AD0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,6 +30,10 @@ Global
 		{7DC9A008-DD42-44D6-BDFC-B1776B6AAB10}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DC9A008-DD42-44D6-BDFC-B1776B6AAB10}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DC9A008-DD42-44D6-BDFC-B1776B6AAB10}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E48F5D8-C4EC-4012-85BA-5F73EF7E4AD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E48F5D8-C4EC-4012-85BA-5F73EF7E4AD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E48F5D8-C4EC-4012-85BA-5F73EF7E4AD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E48F5D8-C4EC-4012-85BA-5F73EF7E4AD0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

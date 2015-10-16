@@ -172,6 +172,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Ingot\Ingot.csproj">
+      <Project>{3e48f5d8-c4ec-4012-85ba-5f73ef7e4ad0}</Project>
+      <Name>Ingot</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ProtonAnalytics.Web\ProtonAnalytics.Web.csproj">
       <Project>{882bab7b-7df7-4fdf-acd9-4ac5ff4b2e37}</Project>
       <Name>ProtonAnalytics.Web</Name>

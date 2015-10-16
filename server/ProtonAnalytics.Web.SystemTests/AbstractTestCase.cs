@@ -11,13 +11,15 @@ using ProtonAnalytics.Web.Tests;
 using NHtmlUnit.Html;
 using Newtonsoft.Json;
 using NLog;
+using Ingot.Clients;
+using System.Text.RegularExpressions;
 
 namespace ProtonAnalytics.Web.Tests
 {
     abstract class AbstractTestCase
     {
         internal readonly string UserTableName = "UserProfile";
-        internal const string WebsiteUrl = "http://{0}/ProtonAnalytics.Web/{1}";
+        internal const string WebsiteUrl = "http://{0}/ProtonAnalytics.Web";
         internal static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public void ExecuteQuery(string sql, object parameters = null)
@@ -70,9 +72,9 @@ namespace ProtonAnalytics.Web.Tests
             return gameName;
         }
 
-        protected WebClient GetAuthenticatedClient(string userName)
+        protected WebClient GetHtmlUnitAuthenticatedClient(string userName)
         {
-            var client = GetClient();
+            var client = GetHtmlUnitClient();
             client.LogIn(userName, this.PasswordFor(userName));
             return client;
         }
@@ -83,9 +85,28 @@ namespace ProtonAnalytics.Web.Tests
             return firstUser;
         }
 
-        protected WebClient GetClient()
+        protected WebClient GetHtmlUnitClient()
         {
             var client = new WebClient(BrowserVersion.CHROME);
+            return client;
+        }
+
+        protected HttpClient GetAuthenticatedClient(string userName)
+        {
+            var client = new HttpClient(string.Format(AbstractTestCase.WebsiteUrl, Environment.MachineName));
+
+            var loginPage = client.Request("GET", "/Account/Login");
+            var regex = new Regex(@"<input name=""__RequestVerificationToken"".*value=""([^""]+)""");
+            var antiForgeryToken = regex.Match(loginPage.Content()).Groups[1].Value;
+
+            var isAuthed = client.Request("POST", "/Account/Login", new Dictionary<string, string>()
+            {
+                { "__RequestVerificationToken", antiForgeryToken },
+                { "UserName", userName },
+                { "Password", "p@ssw0rd!" },
+                { "RememberMe", "false" }
+            });
+
             return client;
         }
 
