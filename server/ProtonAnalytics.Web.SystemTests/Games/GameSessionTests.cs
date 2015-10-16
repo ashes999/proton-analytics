@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Ingot.Clients;
+using NUnit.Framework;
 using ProtonAnalytics.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ProtonAnalytics.Web.Tests.Games
         [Test]
         public void PostCreatesNewGameSessionsWhenFieldsAreValid()
         {
-            var client = this.GetHtmlUnitClient();
+            var client = this.GetClient();
             var user = this.GetAnyUser();
             var game = this.EnsureUserHasGame(user);
 

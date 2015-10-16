@@ -25,16 +25,16 @@ namespace ProtonAnalytics.Web.Tests.Games
         {
             // Pick any two users. Make sure both have games.  Log in as one. This fails if there's only one user.
             var firstUser = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
-            var firstUsersGame = this.EnsureUserHasGame(firstUser);
+            var firstUsersGame = this.EnsureUserHasGame(firstUser).HtmlEncode();
             
             var secondUser = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName + " WHERE UserId != @first", new { first = firstUser.UserId });
-            var secondUsersGame = this.EnsureUserHasGame(secondUser);
+            var secondUsersGame = this.EnsureUserHasGame(secondUser).HtmlEncode();
 
-            var client = this.GetHtmlUnitAuthenticatedClient(firstUser.UserName);
+            var client = this.GetAuthenticatedClient(firstUser.UserName);
 
-            var page = client.GetSiteUrl("/Game").Body.TextContent;
-            Assert.IsTrue(page.Contains(firstUsersGame));
-            Assert.IsFalse(page.Contains(secondUsersGame));
+            var html = client.Request("GET", "/Game").Content();
+            Assert.IsTrue(html.Contains(firstUsersGame), "Expected to see " + firstUsersGame + " in the HTML but didn't.\n" + html);
+            Assert.IsFalse(html.Contains(secondUsersGame));
         }
 
         [Test]
@@ -44,10 +44,12 @@ namespace ProtonAnalytics.Web.Tests.Games
             this.ExecuteQuery("DELETE FROM Game WHERE Name = @name", new { name = gameName });
 
             var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
-            var client = this.GetHtmlUnitAuthenticatedClient(user.UserName);
-            var page = client.GetSiteUrl("/Game/Create");
-            page.SetTextField("Name", gameName);
-            page.ClickSubmit();
+            var client = this.GetAuthenticatedClient(user.UserName);
+            var page = client.Request("POST", "/Game/Create", new Dictionary<string, string>()
+            {
+                { "Name", gameName },
+                { "OwnerId", user.UserId.ToString() }
+            });
 
             var count = this.ExecuteScalar<int>("SELECT COUNT(*) FROM Game WHERE Name = @name", new { name = gameName });
             Assert.That(count, Is.EqualTo(1), "Didn't see game in DB after creating it");
@@ -62,14 +64,17 @@ namespace ProtonAnalytics.Web.Tests.Games
             this.ExecuteQuery("DELETE FROM Game WHERE Name = @name", new { name = gameName });
 
             var user = this.ExecuteScalar<User>("SELECT * FROM " + this.UserTableName);
-            var client = this.GetHtmlUnitAuthenticatedClient(user.UserName);
+            var client = this.GetAuthenticatedClient(user.UserName);
+            
             var game = new Game()
             {
                 Name = gameName,
                 OwnerId = user.UserId
             };
+            var gameJson = "=" + JsonConvert.SerializeObject(game);
 
-            var page = client.GetSiteUrl("/api/games", "POST", game);
+
+            var page = client.Request("POST", "/api/games", gameJson);
 
             var count = this.ExecuteScalar<int>("SELECT COUNT(*) FROM Game WHERE Name = @name", new { name = gameName });
             Assert.That(count, Is.EqualTo(1), "Didn't see game in DB after creating it");

@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 namespace ProtonAnalytics.Web.Controllers.Api
 {
     [Authorize]
-    public class GamesController : ApiController
+    public class GamesController : BaseApiController
     {
         // GET api/games
         public JsonApiObject<Game> Get()
@@ -33,6 +33,8 @@ namespace ProtonAnalytics.Web.Controllers.Api
         // POST api/games
         public JsonApiObject<Game> Post([FromBody]string json)
         {
+            NullCheck(json);
+
             var game = JsonConvert.DeserializeObject<Game>(json);
 
             var toReturn = new JsonApiObject<Game>();
@@ -57,6 +59,7 @@ namespace ProtonAnalytics.Web.Controllers.Api
         // PUT api/games/5
         public JsonApiObject<Game> Put(Guid id, [FromBody]string json)
         {
+            NullCheck(json);
             return null;
         }
 
@@ -64,6 +67,6 @@ namespace ProtonAnalytics.Web.Controllers.Api
         public JsonApiObject<Game> Delete(Guid id)
         {
             return null;
-        }
+        }        
     }
 }
